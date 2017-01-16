@@ -26,3 +26,5 @@ function purchase_potions(buyHP, buyMP) {
     set_message("Buying MP pots.");
   }
 }
+
+//test commit
