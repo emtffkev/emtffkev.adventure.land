@@ -27,6 +27,8 @@ function purchase_potions(buyHP, buyMP) {
   }
 }
 
+//test commit
+
 //function to find out how many chests are on the ground
 function getNumChests()
 {
