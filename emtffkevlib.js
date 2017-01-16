@@ -26,3 +26,14 @@ function purchase_potions(buyHP, buyMP) {
     set_message("Buying MP pots.");
   }
 }
+
+//function to find out how many chests are on the ground
+function getNumChests()
+{
+    var count = 0;
+    for(id in parent.chests)
+    {
+        count++;
+    }
+    return count;
+}
