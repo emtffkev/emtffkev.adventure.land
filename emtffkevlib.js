@@ -27,7 +27,21 @@ function purchase_potions(buyHP, buyMP) {
   }
 }
 
-//test commit
+function loot()
+{
+	var looted=0;
+	if(safeties && mssince(last_loot)<200) return;
+	last_loot=new Date();
+	for(id in parent.chests)
+	{
+		var chest=parent.chests[id];
+		if(safeties && (chest.items>character.esize || chest.last_loot && mssince(chest.last_loot)<1600)) continue;
+		chest.last_loot=last_loot;
+		parent.socket.emit("open_chest",{id:id});
+		looted++;
+		//if(looted==2) break;
+	}
+}
 
 //function to find out how many chests are on the ground
 function getNumChests()
