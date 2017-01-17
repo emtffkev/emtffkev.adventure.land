@@ -123,8 +123,8 @@ function getNumChests()
 // keepSafe - Keep at range during attack
 function keepSafe(){
 	var target = get_targeted_monster();
-	var maxRange = 65;
-	var minRange = 60;
+	var maxRange = 70;
+	var minRange = 70;
 
 	var distance = Math.hypot(
 		character.real_x - target.real_x,
