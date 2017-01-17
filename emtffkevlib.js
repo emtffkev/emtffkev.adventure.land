@@ -43,72 +43,6 @@ function loot() {
     }
 }
 
-// Add XP Timer
-
-function init_xptimer(minref) {
-    minute_refresh = minref || 1;
-    parent.add_log(minute_refresh.toString() + ' min until tracker refresh!', 0x00FFFF);
-
-    let $ = parent.$;
-    let brc = $('#bottomrightcorner');
-
-    brc.find('#xptimer').remove();
-
-    let xpt_container = $('<div id="xptimer"></div>').css({
-        background: 'black',
-        border: 'solid gray',
-        borderWidth: '5px 5px',
-        width: '320px',
-        height: '96px',
-        fontSize: '28px',
-        color: '#77EE77',
-        textAlign: 'center',
-        display: 'table',
-        overflow: 'hidden',
-        marginBottom: '-5px'
-    });
-
-    //vertical centering in css is fun
-    let xptimer = $('<div id="xptimercontent"></div>')
-        .css({
-            display: 'table-cell',
-            verticalAlign: 'middle'
-        })
-        .html('Estimated time until level up:<br><span id="xpcounter" style="font-size: 40px !important; line-height: 28px">Loading...</span><br><span id="xprate">(Kill something!)</span>')
-        .appendTo(xpt_container);
-
-    brc.children().first().after(xpt_container);
-}
-
-function update_xptimer() {
-    if (character.xp == last_xp_checked_kill) return;
-
-    let $ = parent.$;
-    let now = new Date();
-
-    let time = Math.round((now.getTime() - last_minutes_checked.getTime()) / 1000);
-    if (time < 1) return; // 1s safe delay
-    let xp_rate = Math.round((character.xp - last_xp_checked_minutes) / time);
-    if (time > 60 * minute_refresh) {
-        last_minutes_checked = new Date();
-        last_xp_checked_minutes = character.xp;
-    }
-    last_xp_checked_kill = character.xp;
-
-    let xp_missing = parent.G.levels[character.level] - character.xp;
-    let seconds = Math.round(xp_missing / xp_rate);
-    let minutes = Math.round(seconds / 60);
-    let hours = Math.round(minutes / 60);
-    let counter = `${hours}h ${minutes % 60}min`;
-
-    $('#xpcounter').text(counter);
-    $('#xprate').text(`${ncomma(xp_rate)} XP/s`);
-}
-
-function ncomma(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 //function to find out how many chests are on the ground
 function getNumChests() {
     var count = 0;
@@ -124,13 +58,23 @@ function keepSafe() {
     var maxRange = 70;
     var minRange = 70;
 
-    var distance = Math.hypot(
-        character.real_x - target.real_x,
-        character.real_y - target.real_y
-    );
+    var distance = parent.distance(character,target);
+
+    if (target) {
+      change_target(target);
+
+      var diff_x = character.real_x - target.real_x;
+      var diff_y = character.real_y - target.real_y;
+      angle = Math.atan2(diff_y, diff_x);
+    }
 
     // Comfortable range
-    if (distance > maxRange) {
+    var new_x = target.real_x + character.range * Math.cos(angle);
+    var new_y = target.real_y + character.range * Math.sin(angle);
+
+    move(new_x, new_y);
+
+    /*if (distance > maxRange) {
         move(
             character.real_x + (target.real_x - character.real_x) / 2,
             character.real_y + (target.real_y - character.real_y) / 2
@@ -140,5 +84,5 @@ function keepSafe() {
             character.real_x - (target.real_x - character.real_x) / 2,
             character.real_y - (target.real_y - character.real_y) / 2
         );
-    }
+    }*/
 }
