@@ -119,3 +119,28 @@ function getNumChests()
     }
     return count;
 }
+
+// keepSafe - Keep at range during attack
+function keepSafe(){
+	var target = get_targeted_monster();
+	var maxRange = 65;
+	var minRange = 60;
+
+	var distance = Math.hypot(
+		character.real_x - target.real_x,
+		character.real_y - target.real_y
+	);
+
+	// Comfortable range
+	if (distance > maxRange) {
+		move(
+			character.real_x + (target.real_x - character.real_x) / 2,
+			character.real_y + (target.real_y - character.real_y) / 2
+		);
+	} else if (distance < minRange) {
+		move(
+			character.real_x - (target.real_x - character.real_x) / 2,
+			character.real_y - (target.real_y - character.real_y) / 2
+		);
+	}
+}
