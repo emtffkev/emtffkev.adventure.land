@@ -72,9 +72,7 @@ function keepSafe() {
     var new_x = target.real_x + character.range * Math.cos(angle);
     var new_y = target.real_y + character.range * Math.sin(angle);
 
-    if (!stationary) {
-        move(new_x, new_y);
-    }
+    move(new_x, new_y);
 
     /*if (distance > maxRange) {
         move(
